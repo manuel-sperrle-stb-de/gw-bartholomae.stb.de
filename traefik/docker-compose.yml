@@ -1,0 +1,46 @@
+networks:
+
+  traefik:
+    external: true
+
+services:
+
+  # https://hub.docker.com/_/traefik
+  traefik:
+
+    # image, build, depends_on, command
+    image: traefik:v3.0
+
+    # container_name, hostname, networks, ports
+    ports:
+      - 80:80
+      - 443:443
+      - 8080:8080 # traefik dashboard
+
+    # env_file, environment
+    env_file:
+      - ./config/.env
+
+    # volumes
+    volumes:
+
+      # localtime
+      - /etc/localtime:/etc/localtime:ro
+
+      # socket
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+      # config
+      - ./config/traefik.yml:/etc/traefik/traefik.yml:ro
+      - ./config/dynamic:/etc/traefik/dynamic:ro
+
+      # data
+      - ./data/letsencrypt:/letsencrypt:cached
+
+    # healthcheck, restart
+    healthcheck:
+      # Run traefik healthcheck command
+      # https://doc.traefik.io/traefik/operations/cli/#healthcheck
+      # ! depends on: ping=true
+      test: traefik healthcheck --ping
+    restart: unless-stopped

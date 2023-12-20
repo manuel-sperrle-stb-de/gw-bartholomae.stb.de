@@ -1,0 +1,14 @@
+# Traefik dynamic configuration file
+# See https://doc.traefik.io/traefik/getting-started/configuration-overview/#the-dynamic-configuration
+
+tls:
+
+  # default generated cert via ACME default resolver
+  stores:
+    default:
+      defaultGeneratedCert:
+        resolver: hetznerdns
+        domain:
+          main: 'domain.tld'
+          sans:
+            - '*.domain.tld'

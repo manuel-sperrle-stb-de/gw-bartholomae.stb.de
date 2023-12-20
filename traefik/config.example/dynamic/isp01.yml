@@ -1,0 +1,34 @@
+# To create a user:password pair, the following command can be used:
+# htpasswd -nb user password
+
+# http routing section
+http:
+
+  routers:
+    # Define a connection between requests and services
+    isp01:
+      rule: "Host(`isp01.domain.tld`)"
+       # If the rule matches, applies the middleware
+      middlewares:
+      - isp01
+      # If the rule matches, forward to the service declared below
+      service: isp01
+      tls:
+        certResolver: hetznerdns
+
+  middlewares:
+    # Define an authentication mechanism
+    isp01:
+      basicAuth:
+        users:
+        # test / test
+          - test:$apr1$H6uskkkW$IgXLP6ewTrSuBkTrqE8wj/
+        removeheader: true
+
+  services:
+    
+    # Define how to reach an existing service on our infrastructure
+    isp01:
+      loadBalancer:
+        servers:
+        - url: http://isp01internal

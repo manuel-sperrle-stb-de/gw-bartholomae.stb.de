@@ -1,0 +1,25 @@
+services:
+
+  postfix:
+
+    # image, build, depends_on, command  
+    image: postfix
+    build:
+      context: build
+
+    # container_name, hostname, networks, ports      
+    ports:
+      - 25:25
+
+    # env_file, environment
+    env_file:
+      - config/.env
+
+    # volumes
+    volumes:
+
+      # localtime
+      - /etc/localtime:/etc/localtime:ro
+
+    # healthcheck, restart
+    restart: unless-stopped
